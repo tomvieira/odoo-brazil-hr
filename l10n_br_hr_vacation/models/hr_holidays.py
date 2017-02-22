@@ -45,21 +45,9 @@ class HrHolidays(models.Model):
         ondelete='restrict',
         index=True,
     )
-    contract_id = fields.Many2one(
-        comodel_name='hr.contract',
-        string=u'Contrato Vigente',
-    )
-    periodo_concessivo_inicio = fields.Date(
-        string=u'Início Período Concessivo',
-    )
-    periodo_concessivo_fim = fields.Date(
-        string=u'Fim Período Concessivo',
-    )
-    limite_gozo = fields.Date(
-        string=u'Data limite para gozar férias',
-    )
-    limite_aviso = fields.Date(
-        string=u'Data limite para aviso de férias',
+    controle_ferias = fields.Many2one(
+        comodel_name='hr.vacation.control',
+        string=u'Controle de Férias',
     )
 
     @api.depends('vacations_days', 'sold_vacations_days')
@@ -103,5 +91,5 @@ class HrHolidays(models.Model):
     @api.onchange('parent_id')
     def _compute_contract(self):
         if self.parent_id:
-            self.contract_id = self.parent_id.contract_id
+            self.controle_ferias = self.parent_id.controle_ferias
             self.name = 'Férias'
